@@ -15,7 +15,7 @@
   
   <!-- 这是注释：用于显示周一到周日 -->
   <view class="header-row">
-    <view class="header-placeholder">
+    <view class="header-placeholder" style="{{leftColumnWidthStyle}}">
       <!-- 在左上角显示月份 -->
       <view class="month-char">{{currentMonth}}</view>
       <view class="month-char">月</view>
@@ -33,31 +33,34 @@
   <!-- 课程表主体 -->
   <view class="main-content">
   <!-- 左侧时间列 -->
-  <view class="time-column">
+  <view class="time-column" style="{{leftColumnWidthStyle}}">
     <!-- wx:for 的 item 和 index 可以自定义名字 -->
     <view class="time-cell {{idx === currentTimeIndex ? 'current-time-highlight' : ''}}"
       wx:for="{{timeSections}}" wx:for-item="section" wx:for-index="idx" wx:key="idx">
       <view class="section-number">{{section}}</view>
-      <view class="section-time">{{sectionTimes[idx].start}}-{{sectionTimes[idx].end}}</view>
+      <view class="section-time">{{sectionTimes[idx].start}}</view>
+      <view class="section-time">{{sectionTimes[idx].end}}</view>
     </view>
   </view>
     <!-- 右侧课程格子区域 -->
+    <!-- ... -->
     <view class="courses-grid">
-    <!-- 循环渲染课程项目 -->
+      <!-- 循环渲染课程项目 -->
       <view 
-        wx:for="{{coursesToRender}}" 
-        wx:key="index" 
-        class="course-item" 
-        style="{{item.styleStr}}" 
-        bind:tap="showCourseDetail" 
-        data-course-index="{{index}}" 
+        wx:for="{{coursesToRender}}"
+        wx:key="index"
+        class="course-item"
+        style="{{item.styleStr}}"
+        bind:tap="showCourseDetail"
+        data-course-index="{{index}}"
         bind:longpress="deleteCourse"
-        >
+      >
         <view class="course-name">{{item.name}}</view>
         <view class="course-teacher">{{item.teacher}}</view>
         <view class="course-location">@{{item.location}}</view>
       </view>
     </view>
+    <!-- ... -->
       
   </view>
   <view class="add-button" bind:tap="navigateToAddCourse">+</view>

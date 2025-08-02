@@ -58,14 +58,13 @@
 
 /* 左上角月份占位符 */
 .header-placeholder {
-  width: 50px; /* 注意：这个宽度需要和下面的 time-column 宽度保持一致 */
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #fdfdfd;
-  border-right: 1px solid #eee;
+  padding-right:0 8px;
   box-sizing: border-box;
 }
 .month-char {
@@ -126,10 +125,11 @@
 
 /* 左侧时间/节数列表 */
 .time-column {
-  width: 50px;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
+  padding-right: 8px;
+  align-items: center;
 }
 
 /* 每一个时间格子 */
@@ -139,19 +139,36 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  position: relative;
   box-sizing: border-box;
+  width: 100%;
 }
+
+/* 用伪元素创建更精致的底部分隔线 */
+.time-cell::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15%; /* 线从左边 15% 的位置开始 */
+  right: 15%; /* 线到右边 15% 的位置结束 */
+  height: 1px;
+  background-color: #f0f0f0;
+}
+/* 最后一个时间格子不要分隔线 */
+.time-column .time-cell:last-child::after {
+  display: none;
+}
+
 .section-number {
   font-weight: bold;
   font-size: 16px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   color: #555;
 }
 .section-time {
-  font-size: 10px;
+  font-size: 12px;
   color: #999;
+  line-height: 1.3;
 }
 
 /* 当前时间节次高亮样式 */
@@ -167,6 +184,19 @@
 .courses-grid {
   flex: 1;
   position: relative;
+}
+
+.course-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+.course-teacher {
+  font-size: 11px;
+  opacity: 0.9;
+}
+.course-location {
+  opacity: 0.9;
+  margin-top: 2px;
 }
 
 /* 课程卡片 */
@@ -186,18 +216,7 @@
   /* 应用动画 */
   animation: fadeIn 0.4s ease-out;
 }
-.course-name {
-  font-weight: bold;
-  margin-bottom: 2px;
-}
-.course-teacher {
-  font-size: 11px;
-  opacity: 0.9;
-}
-.course-location {
-  opacity: 0.9;
-  margin-top: 2px;
-}
+
 
 /* 卡片加载动画 */
 @keyframes fadeIn {

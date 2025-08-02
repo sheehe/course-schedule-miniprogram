@@ -21,7 +21,7 @@ Page({
     weekdays: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
     timeSections: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // 节数列表
     sectionTimes: [ // 每节课的详细时间
-      { start: '8:30', end: '9:15' }, { start: '9:20', end: '10:05' },
+      { start: '08:30', end: '09:15' }, { start: '09:20', end: '10:05' },
       { start: '10:20', end: '11:05' }, { start: '11:10', end: '11:55' },
       { start: '14:30', end: '15:15' }, { start: '15:20', end: '16:05' },
       { start: '16:20', end: '17:05' }, { start: '17:10', end: '17:55' },
@@ -40,6 +40,7 @@ Page({
     weekPickerRange: [], // 周数选择器的选项范围, e.g., ['第1周', '第2周', ...]
     dateList: [],        // 顶部的日期列表, e.g., ['08/01', '08/02', ...]
     currentMonth: 0,     // 左上角显示的月份数字
+    leftColumnWidthStyle: '',
     
     // --- UI状态数据 ---
     todayIndex: -1,          // 今天是星期几(1-7)，用于高亮
@@ -51,24 +52,63 @@ Page({
     timer: null,             // 用于存放时间高亮定时器的ID
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   * 页面加载时只执行一次，负责初始化工作。
-   */
-  onLoad: function (options) {
-    this.calculateNavBarHeight(); // 1. 计算自定义导航栏高度
-    this.initWeekPicker();        // 2. 初始化周数选择器
-    this.initTodayHighlight();    // 3. 初始化“今天”高亮
-    this.generateDateList();      // 4. 生成顶部日期列表
+/**
+ * 生命周期函数--监听页面加载
+ */
+onLoad: function (options) {
+  // --- 步骤 1: 执行所有无需等待UI渲染的初始化 ---
+  this.calculateNavBarHeight(); // 计算自定义导航栏高度
+  this.initWeekPicker();        // 初始化周数选择器
+  this.initTodayHighlight();    // 初始化“今天”高亮的数据
+  this.generateDateList();      // 生成顶部日期列表
 
-    // 5. 加载课程数据并启动渲染流程
-    const storedCourses = wx.getStorageSync('courses') || this.getDefaultCourses();
-    this.setData({ courses: storedCourses });
-    this.initSchedule(storedCourses);
-    
-    // 6. 启动当前时间高亮定时器
-    this.startTimer();
-  },
+  // --- 步骤 2: 加载课程数据 ---
+  const storedCourses = wx.getStorageSync('courses') || this.getDefaultCourses();
+  this.setData({ courses: storedCourses });
+
+  // --- 步骤 3: 首次渲染UI骨架 ---
+  // 此刻，使用默认的 sectionHeight(50) 和自适应的列宽来渲染
+  this.processCourses(storedCourses);
+
+  // --- 步骤 4: 启动定时器 ---
+  this.startTimer();
+
+  // --- 步骤 5: 在UI渲染完成后，查询真实布局尺寸并二次渲染 ---
+  // 使用 setTimeout 确保查询时 DOM 已经稳定
+  setTimeout(() => {
+    const query = wx.createSelectorQuery();
+    // 同时查询 time-cell 的高度 和 time-column 的宽度
+    query.select('.time-cell').boundingClientRect();
+    query.select('.time-column').boundingClientRect();
+    query.exec((res) => {
+      
+      // -- a. 处理高度 --
+      const newHeight = res && res[0] ? res[0].height : 0;
+      if (newHeight && newHeight !== this.data.sectionHeight) {
+        console.log('获取到动态高度:', newHeight);
+        // 更新高度，并触发一次使用新高度的渲染
+        this.setData({ sectionHeight: newHeight }, () => {
+          this.processCourses(this.data.courses);
+        });
+      } else if (!newHeight) {
+        console.error('获取 .time-cell 高度失败！');
+      }
+      
+      // -- b. 处理宽度 --
+      const newWidth = res && res[1] ? res[1].width : 0;
+      if (newWidth) {
+        console.log('获取到动态宽度:', newWidth);
+        // 只更新宽度，这不会触发课程的重新计算，只会让 WXML 的 style 生效
+        this.setData({
+          leftColumnWidthStyle: `width: ${newWidth}px;`
+        });
+      } else {
+        console.error('获取 .time-column 宽度失败！');
+      }
+
+    });
+  }, 200); // 稍微增加延迟，确保在复杂页面也能查询成功
+},
   
   /**
    * 生命周期函数--监听页面卸载
