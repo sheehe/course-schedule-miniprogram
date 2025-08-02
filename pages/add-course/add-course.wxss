@@ -1,0 +1,54 @@
+/* pages/add-course/add-course.wxss */
+
+/* 整个页面的背景色 */
+page {
+  background-color: #f8f8f8;
+}
+
+/* 新增的页面容器样式 */
+.page-container {
+  padding: 20px; /* 让容器和屏幕边缘有20px的内边距 */
+}
+
+/* 表单卡片的样式 */
+.form-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 0 20px; /* 卡片内部的左右内边距 */
+}
+
+/* --- 以下是内部表单项的样式，基本保持不变 --- */
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  width: 80px;
+  color: #333;
+}
+
+.form-input {
+  flex: 1;
+}
+
+.form-picker {
+  flex: 1;
+  color: #888;
+}
+
+/* picker 中有内容时，文字变深色 */
+.picker-value {
+  color: #333;
+}
+
+.save-button {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}

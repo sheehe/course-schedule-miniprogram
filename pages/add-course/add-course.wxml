@@ -1,0 +1,46 @@
+<!--pages/add-course/add-course.wxml-->
+<view class="page-container">
+  <view class="form-container">
+    <!-- 课程名称 -->
+    <view class="form-item">
+      <text class="form-label">课程名称</text>
+      <input class="form-input" placeholder="请输入课程名称" bindinput="onCourseNameInput" />
+    </view>
+
+    <!-- 上课地点 -->
+    <view class="form-item">
+      <text class="form-label">上课地点</text>
+      <input class="form-input" placeholder="请输入上课地点" bindinput="onLocationInput" />
+    </view>
+
+    <!-- 星期选择 -->
+    <view class="form-item">
+      <text class="form-label">上课星期</text>
+      <picker class="form-picker" range="{{weekdays}}" bindchange="onWeekdayChange">
+        <view wx:if="{{selectedWeekdayIndex !== null}}">{{weekdays[selectedWeekdayIndex]}}</view>
+        <view wx:else>请选择星期</view>
+      </picker>
+    </view>
+
+    <!-- 开始节数 -->
+    <view class="form-item">
+      <text class="form-label">开始节数</text>
+      <picker class="form-picker" range="{{timeSections}}" bindchange="onTimeChange">
+        <view wx:if="{{selectedTimeIndex !== null}}">{{timeSections[selectedTimeIndex]}}</view>
+        <view wx:else>请选择开始节数</view>
+      </picker>
+    </view>
+
+    <!-- 持续节数 -->
+    <view class="form-item">
+      <text class="form-label">持续节数</text>
+      <picker class="form-picker" range="{{durations}}" bindchange="onDurationChange">
+        <view wx:if="{{selectedDurationIndex !== null}}">{{durations[selectedDurationIndex]}}</view>
+        <view wx:else>请选择持续节数</view>
+      </picker>
+    </view>
+
+    <!-- 保存按钮 -->
+    <button class="save-button" type="primary" bindtap="saveCourse">保存</button>
+  </view>
+</view>

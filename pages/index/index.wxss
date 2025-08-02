@@ -1,0 +1,235 @@
+/**
+ * pages/index/index.wxss
+ * 主页（课表页）的样式文件
+ */
+
+/* --- 1. 页面整体布局 --- */
+
+/* 页面根容器，负责把内容推到自定义导航栏下方 */
+.schedule-container {
+  width: 100%;
+  height: 100vh; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* --- 2. 自定义导航栏 --- */
+
+/* 导航栏骨架：负责定位、背景和阴影 */
+.custom-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  z-index: 1000;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* 导航栏内容区：负责高度控制和内容居中 */
+.nav-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 周数选择器文字和图标的样式 */
+.current-week-display {
+  font-size: 17px;
+  font-weight: 600; /* 加粗 */
+  color: #000000;
+  display: inline-flex;
+  align-items: center;
+}
+.dropdown-icon {
+  width: 15px;
+  height: 15px;
+  margin-left: 6px;
+}
+
+
+/* --- 3. 星期与日期表头 --- */
+
+.header-row {
+  display: flex;
+  background-color: #ffffff;
+}
+
+/* 左上角月份占位符 */
+.header-placeholder {
+  width: 50px; /* 注意：这个宽度需要和下面的 time-column 宽度保持一致 */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fdfdfd;
+  border-right: 1px solid #eee;
+  box-sizing: border-box;
+}
+.month-char {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+/* 星期容器 (周一到周日) */
+.weekdays-container {
+  flex: 1;
+  display: flex;
+}
+
+/* 每一个星期格子 */
+.header-cell {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.weekday-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+}
+.date-text {
+  font-size: 12px;
+  color: #999;
+}
+
+/* “今天”高亮样式 */
+.today-highlight .weekday-text {
+  color: #007AFF;
+  font-weight: bold;
+}
+.today-highlight .date-text {
+  background-color: #007AFF;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 2px 4px;
+  min-width: 18px;
+  box-sizing: border-box;
+}
+
+
+/* --- 4. 课程表主体 --- */
+
+.main-content {
+  display: flex;
+  flex: 1;/* flex: 1;  <-- 如果你希望内容刚好占满一屏，则需要开启flex:1 */
+  overflow: hidden;
+}
+
+/* 左侧时间/节数列表 */
+.time-column {
+  width: 50px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 每一个时间格子 */
+.time-cell {
+  flex: 1; /* <-- 关键！ */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+}
+.section-number {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 2px;
+  color: #555;
+}
+.section-time {
+  font-size: 10px;
+  color: #999;
+}
+
+/* 当前时间节次高亮样式 */
+.current-time-highlight .section-number,
+.current-time-highlight .section-time {
+  color: #007AFF;
+  font-weight: bold;
+}
+
+
+/* --- 5. 右侧课程网格与课程卡片 --- */
+
+.courses-grid {
+  flex: 1;
+  position: relative;
+}
+
+/* 课程卡片 */
+.course-item {
+  position: absolute;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* 应用动画 */
+  animation: fadeIn 0.4s ease-out;
+}
+.course-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+.course-teacher {
+  font-size: 11px;
+  opacity: 0.9;
+}
+.course-location {
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* 卡片加载动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* --- 6. 悬浮添加按钮 --- */
+
+.add-button {
+  position: fixed;
+  right: 30px;
+  bottom: 50px;
+  width: 50px;
+  height: 50px;
+  background-color: #007AFF;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+.add-button-hover {
+  background-color: #0056b3;
+}
